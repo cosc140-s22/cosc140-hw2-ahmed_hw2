@@ -4,24 +4,7 @@
 #
 #######################################################
 
-
-def getTimeString(H, M, S):
-    '''
-        Return a well formatted time string from the hours, minutes, and seconds
-    '''
-    timeStr = []
-
-    if(H > 0):
-        timeStr.append(F"{H:02d}h")
-    if(M > 0):
-        timeStr.append(F"{M:02d}m")
-    if(S > 0):
-        timeStr.append(F"{S}s")
-
-    return ":".join(timeStr)
-
-
-def getTime():
+def get_time():
     '''
         Get a valid departure time from user
     '''
@@ -37,7 +20,7 @@ def getTime():
             print("Time must be provided in HH:MM format")
 
 
-def getDist():
+def get_dist():
     '''
         Get a valid distance from user
     '''
@@ -50,7 +33,7 @@ def getDist():
             print("Distance must be a valid number of kilometers")
 
 
-def getstops():
+def get_stops():
     '''
         Get a valid number of stops from user
     '''
@@ -62,28 +45,47 @@ def getstops():
             print("stops must be a valid number:")
 
 
+def get_time_breakdown(totalSec):
+    '''
+        Breakdown seconds into hours, minutes and seconds
+    '''
+    S = totalSec
+    H, S = divmod(S, 60*60)
+    M, S = divmod(S, 60)
+
+    # Return all units as int if whole number or rounded float otherwise
+    return [(int(t) if (round(t, 2) == int(t)) else round(float(t), 2)) for t in [H, M, S]]
+
+
+def get_time_str(time):
+    '''
+        Return a properly formatted time string from the hours, minutes, and seconds
+    '''
+    H, M, S = time
+    timeStr = []
+
+    if(H > 0):
+        timeStr.append(F"{H:02d}h")
+    if(M > 0):
+        timeStr.append(F"{M:02d}m")
+    if(S > 0):
+        timeStr.append(F"{S}s")
+
+    return ":".join(timeStr)
+
+
 # Departure time
-depH, depM = getTime()
-dist, stops = getDist(), getstops()
+depH, depM = get_time()
+dist, stops = get_dist(), get_stops()
+departure_time = (depH, depM, 0)
 
 # Travel time calculations
 busSpeed = 40/3600  # Bus travels at 40 km/hr which is 0.01111111 km/s
 stopTime = 30  # Each stop takes 30 seconds
 timeTaken = (dist/busSpeed) + (stopTime * stops)  # The total time the ride takes in seconds
-
-# Travel time breakdown
-travelSec = timeTaken
-travelH, travelSec = divmod(travelSec, 60*60)
-travelM, travelSec = divmod(travelSec, 60)
+travel_time = get_time_breakdown(timeTaken)
 
 # Arrival time
-arrivalSec = (depH*3600) + (depM*60) + timeTaken
-arrivalH, arrivalSec = divmod(arrivalSec, 60*60)
-arrivalM, arrivalSec = divmod(arrivalSec, 60)
+arrival_time = get_time_breakdown((depH*3600) + (depM*60) + timeTaken)
 
-# Convert all hours and minutes to integers, and seconds to int if not fractional or float otherwise
-travelH, travelM, travelSec, arrivalH, arrivalM, arrivalSec = [(int(x) if (round(x, 2) == int(x)) else float(x)) for x in [
-    travelH, travelM, travelSec, arrivalH, arrivalM, arrivalSec]]
-
-
-print(F"\nIf you leave at {getTimeString(depH,depM,0)} and travel {dist} km with {stops} stops, after traveling for {getTimeString(travelH,travelM,travelSec)}, you should arrive at {getTimeString(arrivalH,arrivalM,arrivalSec)}")
+print(F"\nIf you leave at {get_time_str(departure_time)} and travel {dist} km with {stops} stops, after traveling for {get_time_str(travel_time)}, you should arrive at {get_time_str(arrival_time)}")
