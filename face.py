@@ -4,7 +4,6 @@
 #
 #######################################################
 
-from ast import Num
 import turtle
 
 # Program wide constants
@@ -77,6 +76,9 @@ CLOUDS = [
 
 
 def draw_square(t: turtle.Turtle, x, y, size):
+    '''
+        Draws a square of the provided size starting at the given (x,y) coordinates on the lower left
+    '''
     t.penup()
     t.goto(x, y)
     t.pendown()
@@ -87,6 +89,9 @@ def draw_square(t: turtle.Turtle, x, y, size):
 
 
 def draw_rect(t: turtle.Turtle, x, y, width, height):
+    '''
+        Draws a rectangle of the provided size starting at the given (x,y) coordinates on the lower left
+    '''
     t.penup()
     t.goto(x, y)
     t.pendown()
@@ -98,7 +103,14 @@ def draw_rect(t: turtle.Turtle, x, y, width, height):
     t.penup()
 
 
-def draw_cloud(t: turtle.Turtle, radius, cloud_color="white"):
+def draw_cloud(t: turtle.Turtle, radius, x, y, cloud_color="white"):
+    '''
+        Draws a cloud of the provided radius at the (x,y) coordinates
+    '''
+    t.penup()
+    t.goto(x, y)
+    t.pendown()
+
     t.color(cloud_color)
 
     t.begin_fill()
@@ -114,17 +126,18 @@ def draw_cloud(t: turtle.Turtle, radius, cloud_color="white"):
 
 
 def main():
+    # Initalize window and turtle
     t = turtle.Turtle()
     s = t.getscreen()
     s.title("Game Platform")
     s.setworldcoordinates(0, 0, WIDTH, HEIGHT)
     t.speed('fastest')
 
-    # Draw Box around canvas
+    # Draw Border of canvas
     t.pensize(PEN)
     draw_square(t, 0, 0, BORDER_WIDTH)
 
-    # Draw platform
+    # Draw floor
     t.fillcolor(GRASS)
     t.begin_fill()
     draw_rect(t, 0, 0, BORDER_WIDTH, FLOOR)
@@ -148,8 +161,7 @@ def main():
     t.penup()
     t.end_fill()
 
-    # Draw obstacles
-
+    # Draw Obstacles
     for obs in OBSTACLES:
         t.goto(obs["x"], obs["y"])
         t.fillcolor(obs["color"])
@@ -157,11 +169,9 @@ def main():
         draw_rect(t, obs["x"], obs["y"], obs["w"], obs["h"])
         t.end_fill()
 
+    # Draw Clouds
     for cloud in CLOUDS:
-        t.penup()
-        t.goto(cloud["x"], cloud["y"])
-        t.pendown()
-        draw_cloud(t, cloud["radius"])
+        draw_cloud(t, cloud["radius"], cloud["x"], cloud["y"])
 
     turtle.mainloop()
 
