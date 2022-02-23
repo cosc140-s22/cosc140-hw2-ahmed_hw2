@@ -239,7 +239,7 @@ def main():
     draw_static(bg)
 
     # Play Background Music
-    winsound.PlaySound("MUSIC", winsound.SND_ASYNC)
+    winsound.PlaySound(MUSIC, winsound.SND_ASYNC)
 
     # Moving bird turtle
     smaller = PhotoImage(file=BIRD).subsample(12, 12)
