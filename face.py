@@ -8,6 +8,8 @@ from time import sleep
 from tkinter import PhotoImage
 import turtle
 import math
+import winsound
+
 
 # Program wide constants
 WIDTH = 400
@@ -21,7 +23,8 @@ FLOOR = BORDER_HEIGHT//6
 GRASS = "#77DD77"
 SKY = "#add8e6"
 
-BIRD = "bird.gif"
+BIRD = "assets/bird.gif"
+MUSIC = "assets/game_music.wav"
 
 OBSTACLES = [
     {
@@ -114,7 +117,7 @@ def draw_rect(t: turtle.Turtle, x, y, width, height):
     t.penup()
 
 
-def draw_cloud(t: turtle.Turtle, radius, x, y, cloud_color="white"):
+def draw_clouds(t: turtle.Turtle, radius, x, y, cloud_color="white"):
     '''
         Draws a cloud of the provided radius at the (x,y) coordinates
     '''
@@ -168,7 +171,7 @@ def draw_rainbow(t):
         radius -= (penwidth-1)
 
 
-def setup(t: turtle.Turtle):
+def draw_static(t: turtle.Turtle):
     '''
         Draws all the non moving objects to the screen
     '''
@@ -205,7 +208,7 @@ def setup(t: turtle.Turtle):
 
     # Draw Clouds
     for cloud in CLOUDS:
-        draw_cloud(t, cloud["radius"], cloud["x"], cloud["y"])
+        draw_clouds(t, cloud["radius"], cloud["x"], cloud["y"])
 
 
 def animate(t: turtle.Turtle, s: turtle.Screen, FPS):
@@ -233,7 +236,10 @@ def main():
     # Turtle for drawing background
     bg = turtle.Turtle()
     bg.speed('fastest')
-    setup(bg)
+    draw_static(bg)
+
+    # Play Background Music
+    winsound.PlaySound("MUSIC", winsound.SND_ASYNC)
 
     # Moving bird turtle
     smaller = PhotoImage(file=BIRD).subsample(12, 12)
@@ -241,7 +247,7 @@ def main():
     bird = turtle.Turtle(smaller)
 
     while True:
-        animate(bird, s, 10)
+        animate(bird, s, 7)
 
 
 main()
