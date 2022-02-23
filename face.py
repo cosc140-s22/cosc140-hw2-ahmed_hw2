@@ -4,7 +4,10 @@
 #
 #######################################################
 
+from time import sleep
+from tkinter import PhotoImage
 import turtle
+import math
 
 # Program wide constants
 WIDTH = 400
@@ -15,24 +18,32 @@ BORDER_WIDTH = WIDTH-PEN
 BORDER_HEIGHT = HEIGHT-PEN
 FLOOR = BORDER_HEIGHT//6
 
-GRASS = "#348C31"
+GRASS = "#77DD77"
 SKY = "#add8e6"
-BALL = "#ffaec8"
+
+BIRD = "bird.gif"
 
 OBSTACLES = [
     {
         "w": 30,
         "h": 100,
-        "x": 90,
+        "x": 87,
         "y": FLOOR,
-        "color": "#fff200"
+        "color": "orange"
     },
     {
-        "w": 30,
-        "h": 100,
-        "x": 225,
+        "w": 35,
+        "h": 25,
+        "x": 200,
         "y": FLOOR,
         "color": "#ce1927"
+    },
+    {
+        "w": 70,
+        "h": 16,
+        "x": 310,
+        "y": FLOOR,
+        "color": "orange"
     },
     {
         "w": 30,
@@ -46,7 +57,7 @@ OBSTACLES = [
         "h": 100,
         "x": 300,
         "y": BORDER_HEIGHT - 100,
-        "color": "#fff200"
+        "color": "orange"
     }
 ]
 
@@ -125,41 +136,64 @@ def draw_cloud(t: turtle.Turtle, radius, x, y, cloud_color="white"):
         t.right(90)
 
 
-def main():
-    # Initalize window and turtle
-    t = turtle.Turtle()
-    s = t.getscreen()
-    s.title("Game Platform")
-    s.setworldcoordinates(0, 0, WIDTH, HEIGHT)
-    t.speed('fastest')
+def draw_bird(bird: turtle.Turtle, bird_x, bird_y):
+    '''
+        Draws a bird to the screen
+    '''
+    bird.penup()
+    bird.goto(bird_x, bird_y)
 
+
+def draw_arc(t, x, y, r, pensize, color):
+    '''
+        Draw a colored arc
+    '''
+    t.up()
+    t.goto(x+r, y)
+    t.down()
+    t.seth(90)
+    t.pensize(pensize)
+    t.pencolor(color)
+    t.circle(r, 180)
+
+
+def draw_rainbow(t):
+    '''
+        Draw a 7 color rainbow
+    '''
+    radius = (BORDER_WIDTH//2)-3
+    penwidth = 7
+    for col in ['violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red']:
+        draw_arc(t, 200, FLOOR+PEN, radius, penwidth, col)
+        radius -= (penwidth-1)
+
+
+def setup(t: turtle.Turtle):
+    '''
+        Draws all the non moving objects to the screen
+    '''
     # Draw Border of canvas
     t.pensize(PEN)
     draw_square(t, 0, 0, BORDER_WIDTH)
 
-    # Draw floor
-    t.fillcolor(GRASS)
-    t.begin_fill()
-    draw_rect(t, 0, 0, BORDER_WIDTH, FLOOR)
-    t.end_fill()
-
     # Draw sky
     t.fillcolor(SKY)
     t.begin_fill()
-
     sky_height = BORDER_HEIGHT - (FLOOR)
     draw_rect(t, 0, FLOOR, BORDER_WIDTH, sky_height)
     t.end_fill()
 
-    # Draw ball
-    t.fillcolor(BALL)
+    # Draw rainbow
+    r = turtle.Turtle()
+    draw_rainbow(r)
+
+    # Draw floor
+    t.fillcolor(GRASS)
     t.begin_fill()
-    t.penup()
-    t.goto(45, 150)
-    t.pendown()
-    t.circle(25)
-    t.penup()
+    t.pencolor("green")
+    draw_rect(t, 0, 0, BORDER_WIDTH, FLOOR)
     t.end_fill()
+    t.pencolor("black")
 
     # Draw Obstacles
     for obs in OBSTACLES:
@@ -173,7 +207,41 @@ def main():
     for cloud in CLOUDS:
         draw_cloud(t, cloud["radius"], cloud["x"], cloud["y"])
 
-    turtle.mainloop()
+
+def animate(t: turtle.Turtle, s: turtle.Screen, FPS):
+    '''
+        Draws all the moving objects to the screen
+    '''
+    for i in range(12):
+        t.clear()
+        amp = 8
+        x = 45 + (i*30)
+        y = 150 + (math.sin(i)) * (2*math.pi*amp)
+        draw_bird(t,  x,  y)
+        s.update()
+        sleep(1/FPS)
+    t.reset()
+
+
+def main():
+    # Initalize window
+    s = turtle.Screen()
+    s.tracer(0)
+    s.title("Flappity Bird")
+    s.setworldcoordinates(0, 0, WIDTH, HEIGHT)
+
+    # Turtle for drawing background
+    bg = turtle.Turtle()
+    bg.speed('fastest')
+    setup(bg)
+
+    # Moving bird turtle
+    smaller = PhotoImage(file=BIRD).subsample(12, 12)
+    s.addshape(smaller, turtle.Shape("image", smaller))
+    bird = turtle.Turtle(smaller)
+
+    while True:
+        animate(bird, s, 10)
 
 
 main()
