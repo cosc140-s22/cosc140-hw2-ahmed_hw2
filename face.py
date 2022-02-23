@@ -8,7 +8,8 @@ from time import sleep
 from tkinter import PhotoImage
 import turtle
 import math
-import winsound
+import pygame
+import os
 
 
 # Program wide constants
@@ -239,7 +240,8 @@ def main():
     draw_static(bg)
 
     # Play Background Music
-    winsound.PlaySound(MUSIC, winsound.SND_ASYNC)
+    pygame.mixer.init()
+    pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(MUSIC)), loops=-1)
 
     # Moving bird turtle
     smaller = PhotoImage(file=BIRD).subsample(12, 12)
