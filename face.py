@@ -5,7 +5,7 @@
 #######################################################
 
 from time import sleep
-from tkinter import PhotoImage
+from tkinter import PhotoImage, TclError
 import turtle
 import math
 import pygame
@@ -181,11 +181,7 @@ def draw_static(t: turtle.Turtle):
     draw_square(t, 0, 0, BORDER_WIDTH)
 
     # Draw sky
-    t.fillcolor(SKY)
-    t.begin_fill()
-    sky_height = BORDER_HEIGHT - (FLOOR)
-    draw_rect(t, 0, FLOOR, BORDER_WIDTH, sky_height)
-    t.end_fill()
+    t.getscreen().bgcolor(SKY)
 
     # Draw rainbow
     r = turtle.Turtle()
@@ -249,7 +245,11 @@ def main():
     bird = turtle.Turtle(smaller)
 
     while True:
-        animate(bird, s, 7)
+        try:
+            animate(bird, s, 7)
+        except TclError:
+            print("Window closed. Thanks for watching!")
+            break
 
 
 main()
