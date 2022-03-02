@@ -10,5 +10,8 @@
 
 ## Feedback
 
-Once you commit and submit your work to Github, I'll update this section with feedback.
+S
 
+For the bus problem, if a journey is started close to 23:59, the ending time shows 24:xx instead of 00:xx; the hour should roll over after 23 back to 0 to start the next day.
+
+The turtle program was amazing!  Super awesome job.  I loved it.
