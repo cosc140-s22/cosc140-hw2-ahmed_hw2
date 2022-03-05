@@ -2,13 +2,16 @@
 
 ## Homework feedback
 
- * How long did you spend on this homework?
+* How long did you spend on this homework?
     - A few days
 
- * What did you think about it?  What was good?  What could be improved?
+* What did you think about it?  What was good?  What could be improved?
     - I enjoyed it, especially the turtle program.
 
 ## Feedback
 
-Once you commit and submit your work to Github, I'll update this section with feedback.
+S
 
+For the bus problem, if a journey is started close to 23:59, the ending time shows 24:xx instead of 00:xx; the hour should roll over after 23 back to 0 to start the next day.
+
+The turtle program was amazing!  Super awesome job.  I loved it.
