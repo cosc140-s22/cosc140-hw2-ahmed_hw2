@@ -50,34 +50,35 @@ def get_time_breakdown(totalSec):
         Breakdown seconds into hours, minutes and seconds
     '''
     S = totalSec
+    D, S = divmod(S, 3600*24)
     H, S = divmod(S, 60*60)
     M, S = divmod(S, 60)
 
     # Return all units as int if whole number or rounded float otherwise
-    return [(int(t) if (round(t, 2) == int(t)) else round(float(t), 2)) for t in [H, M, S]]
+    return [(int(t) if (round(t, 2) == int(t)) else round(float(t), 2)) for t in [D, H, M, S]]
 
 
 def get_time_str(time):
     '''
         Return a properly formatted time string from the hours, minutes, and seconds
     '''
-    H, M, S = time
+    D, H, M, S = time
     timeStr = []
-
+    Day = F"Day {D+1} "
     if(H > 0):
         timeStr.append(F"{H:02d}h")
     if(M > 0):
         timeStr.append(F"{M:02d}m")
     if(S > 0):
         timeStr.append(F"{S}s")
-
-    return ":".join(timeStr)
+    timeStr = ":".join(timeStr)
+    return F"{Day if D>0 else ''}{timeStr}"
 
 
 # Departure time
 depH, depM = get_time()
 dist, stops = get_dist(), get_stops()
-departure_time = (depH, depM, 0)
+departure_time = (0, depH, depM, 0)  # Day, Hour, Minute, Seconds
 
 # Travel time calculations
 busSpeed = 40/3600  # Bus travels at 40 km/hr which is 0.01111111 km/s
